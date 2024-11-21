@@ -10,9 +10,17 @@ set -e
 # curl -sSL https://raw.githubusercontent.com/izhiqiang/sh/main/lang/binary-install.sh | bash -s java 8
 # bash binary-install.sh java 8
 
-cmd=${1}
-version=${2}
-local_path="/usr/local/lang/"
+
+# SAVE_LANG_PATH=/usr/local/lang2/ bash binary-install.sh java 8
+# curl -sSL https://raw.githubusercontent.com/izhiqiang/sh/main/lang/binary-install.sh | SAVE_LANG_PATH=/usr/local/lang2/ bash -s java 8
+
+
+ARG_CMD=${1}
+ARG_VERSION=${2}
+
+if [ -z "$SAVE_LANG_PATH" ]; then
+  SAVE_LANG_PATH="/usr/local/lang/"
+fi
 
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
@@ -54,23 +62,23 @@ install() {
 
 # -------------------------------------------- install node start-------------------------------------------------------------------------------
 install_go() {
-  local version="${1}"
-  local download_url="https://go.dev/dl/go${version}.${OS}-${ARCH}.tar.gz"
-  local worker_path="${local_path}golang/${1}"
-  install "${download_url}" "${worker_path}" "go-${version}.tar.gz"
+  local filename="go${1}.${OS}-${ARCH}.tar.gz"
+  local download_url="https://go.dev/dl/${filename}"
+  local worker_path="${SAVE_LANG_PATH}golang/${1}"
+  install "${download_url}" "${worker_path}" "${filename}"
 }
 
 # -------------------------------------------- install golang end-------------------------------------------------------------------------------
 
 # -------------------------------------------- install golang start-------------------------------------------------------------------------------
 install_node() {
-  local version="${1}"
   if [ "$ARCH" = "amd64" ]; then
     ARCH="x64"
   fi
-  local download_url="https://nodejs.org/dist/v${version}/node-v${version}-${OS}-${ARCH}.tar.gz"
-  local worker_path="${local_path}nodejs/${1}"
-  install "${download_url}" "${worker_path}" "node-${version}.tar.gz"
+  local filename="node-v${1}-${OS}-${ARCH}.tar.gz"
+  local download_url="https://nodejs.org/dist/v${1}/${filename}"
+  local worker_path="${SAVE_LANG_PATH}nodejs/${1}"
+  install "${download_url}" "${worker_path}" "${filename}"
 }
 # -------------------------------------------- install node end-------------------------------------------------------------------------------
 
@@ -90,7 +98,7 @@ install_java() {
   fi
   local version="${1}"
   local download_url=""
-  local worker_path="${local_path}java/${1}"
+  local worker_path="${SAVE_LANG_PATH}java/${1}"
   if [ -n "${jdk_liunx_url_versions[$version]}" ]; then
     download_url="${jdk_liunx_url_versions[$version]}"
   else
@@ -101,18 +109,18 @@ install_java() {
 }
 # ------------------------------------------ install java end---------------------------------------------------------------------------------------
 
-case "${cmd}" in
+case "${ARG_CMD}" in
 "go")
-  install_go ${version}
+  install_go ${ARG_VERSION}
   ;;
 "node")
-  install_node ${version}
+  install_node ${ARG_VERSION}
   ;;
 "java")
-  install_java ${version}
+  install_java ${ARG_VERSION}
   ;;
 *)
-  log "Operation ${cmd} is not supported"
+  log "Operation ${ARG_CMD} is not supported"
   exit 1
   ;;
 esac
