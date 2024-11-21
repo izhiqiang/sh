@@ -18,7 +18,7 @@ if [ -z "$pkg" ]; then
 fi
 
 install_mac() {
-  if command -v brew &> /dev/null; then
+  if command -v brew &>/dev/null; then
     log "Installing $pkg on macOS using Homebrew..."
     brew install "$pkg"
   else
@@ -28,18 +28,18 @@ install_mac() {
 }
 
 install_linux() {
-  if command -v apt-get &> /dev/null; then
+  if command -v apt-get &>/dev/null; then
     log "Installing $pkg on Linux using apt-get..."
     sudo apt-get update
     sudo apt-get install -y "$pkg"
-  elif command -v yum &> /dev/null; then
+  elif command -v yum &>/dev/null; then
     log "Installing $pkg on Linux using yum..."
     sudo yum update -y
     sudo yum install -y "$pkg"
-  elif command -v dnf &> /dev/null; then
+  elif command -v dnf &>/dev/null; then
     log "Installing $pkg on Linux using dnf..."
     sudo dnf install -y "$pkg"
-  elif command -v pacman &> /dev/null; then
+  elif command -v pacman &>/dev/null; then
     log "Installing $pkg on Linux using pacman..."
     sudo pacman -S --noconfirm "$pkg"
   else
@@ -60,17 +60,17 @@ log "Installing : $pkg"
 
 # Determine the OS and install the package
 case "$os_type" in
-  Darwin)
-    install_mac
-    ;;
-  Linux)
-    install_linux
-    ;;
-  CYGWIN*|MINGW*|MSYS*)
-    install_windows
-    ;;
-  *)
-    log "Error: Unsupported operating system ($os_type)."
-    exit 1
-    ;;
+Darwin)
+  install_mac
+  ;;
+Linux)
+  install_linux
+  ;;
+CYGWIN* | MINGW* | MSYS*)
+  install_windows
+  ;;
+*)
+  log "Error: Unsupported operating system ($os_type)."
+  exit 1
+  ;;
 esac

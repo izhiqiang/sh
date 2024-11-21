@@ -18,12 +18,12 @@ OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 ARCH=$(uname -m)
 if [ "$ARCH" = "x86_64" ]; then
-    ARCH="amd64"
+  ARCH="amd64"
 elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
-    ARCH="arm64"
+  ARCH="arm64"
 else
-    echo "Unsupported architecture: $ARCH"
-    exit 1
+  echo "Unsupported architecture: $ARCH"
+  exit 1
 fi
 
 log() {
@@ -41,7 +41,7 @@ install() {
     log "Download failed: ${download_url}"
     exit 1
   fi
-  
+
   log "Download completed, currently decompressing:${tar_filename} Go to the directory ${worker_path}..."
   mkdir -p "${worker_path}"
   if ! tar -xzvf "${tar_filename}" -C "${worker_path}" --strip-components=1; then
@@ -62,19 +62,17 @@ install_go() {
 
 # -------------------------------------------- install golang end-------------------------------------------------------------------------------
 
-
 # -------------------------------------------- install golang start-------------------------------------------------------------------------------
 install_node() {
   local version="${1}"
   if [ "$ARCH" = "amd64" ]; then
-      ARCH="x64"
+    ARCH="x64"
   fi
   local download_url="https://nodejs.org/dist/v${version}/node-v${version}-${OS}-${ARCH}.tar.gz"
   local worker_path="${local_path}nodejs/${1}"
   install "${download_url}" "${worker_path}" "node-${version}.tar.gz"
 }
 # -------------------------------------------- install node end-------------------------------------------------------------------------------
-
 
 # -------------------------------------------- install java start-------------------------------------------------------------------------------
 declare jdk_liunx_url_versions=(
@@ -85,7 +83,7 @@ declare jdk_liunx_url_versions=(
   [12]="https://repo.huaweicloud.com/java/jdk/12.0.2+10/jdk-12.0.2_linux-x64_bin.tar.gz"
   [13]="https://repo.huaweicloud.com/java/jdk/13+33/jdk-13_linux-x64_bin.tar.gz"
 )
-install_java(){
+install_java() {
   if [ "$OS" != "linux" ]; then
     log "The current script does not support installing Java on the ${OS} operating system"
     exit 1
@@ -99,22 +97,22 @@ install_java(){
     log "on ${OS} Invalid Java version: $version"
     exit 1
   fi
-   install "${download_url}" "${worker_path}" "jdk-${version}.tar.gz"
+  install "${download_url}" "${worker_path}" "jdk-${version}.tar.gz"
 }
 # ------------------------------------------ install java end---------------------------------------------------------------------------------------
 
 case "${cmd}" in
-  "go")
-    install_go ${version}
-    ;;
-  "node")
-    install_node ${version}
-    ;;
-  "java")
-    install_java ${version}
-    ;;
-  *)
-    log "Operation ${cmd} is not supported"
-    exit 1
-    ;;
+"go")
+  install_go ${version}
+  ;;
+"node")
+  install_node ${version}
+  ;;
+"java")
+  install_java ${version}
+  ;;
+*)
+  log "Operation ${cmd} is not supported"
+  exit 1
+  ;;
 esac

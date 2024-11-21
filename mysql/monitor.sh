@@ -1,9 +1,9 @@
 #!/bin/bash
 
-
-sqlconnect="${1:-"/usr/bin/mysql -h127.0.0.1 -P3306 -uroot -p123456 mysql"}"
 # curl -sSL https://raw.githubusercontent.com/izhiqiang/sh/main/mysql/monitor.sh | bash -s "/usr/bin/mysql -h127.0.0.1 -P3306 -uroot -p123456 mysql"
 # bash monitor.sh "/usr/bin/mysql -h127.0.0.1 -P3306 -uroot -p123456 mysql"
+
+sqlconnect="${1:-"/usr/bin/mysql -h127.0.0.1 -P3306 -uroot -p123456 mysql"}"
 
 # 定义函数执行MySQL查询
 mysql_query() {
