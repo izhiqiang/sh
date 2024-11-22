@@ -10,10 +10,8 @@ set -e
 # curl -sSL https://raw.githubusercontent.com/izhiqiang/sh/main/lang/binary-install.sh | bash -s java 8
 # bash binary-install.sh java 8
 
-
 # SAVE_LANG_PATH=/usr/local/lang2/ bash binary-install.sh java 8
 # curl -sSL https://raw.githubusercontent.com/izhiqiang/sh/main/lang/binary-install.sh | SAVE_LANG_PATH=/usr/local/lang2/ bash -s java 8
-
 
 ARG_CMD=${1}
 ARG_VERSION=${2}
@@ -44,6 +42,21 @@ install() {
   local worker_path="${2}"
   local tar_filename="${3}"
 
+  # 检查目录是否存在,是否重新安装
+  if [ -d "${worker_path}" ]; then
+    read -p "Directory ${worker_path} already exists. Do you want to overwrite it? [y/N]: " choice
+    case "$choice" in
+      y|Y ) 
+        log "Overwriting directory: ${worker_path}."
+        rm -rf "${worker_path}"
+        ;;
+      * ) 
+        log "Installation aborted."
+        exit 0
+        ;;
+    esac
+  fi
+  
   log "Start downloading:${download_url} -> ${tar_filename}，Please wait a moment..."
   if ! wget --tries=3 "${download_url}" -O "${tar_filename}"; then
     log "Download failed: ${download_url}"
