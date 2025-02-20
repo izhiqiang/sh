@@ -3,7 +3,7 @@ set -e
 
 # curl -sSL https://raw.githubusercontent.com/izhiqiang/sh/main/sync/docker.sh | bash
 
-hubs=("hkccr.ccs.tencentyun.com/buildx/hub")
+hubs=("hkccr.ccs.tencentyun.com/buildx/hub" "registry.cn-hongkong.aliyuncs.com/buildx/hub")
 
 mysql_versions=("5.7" "8.0" "8.1" "8.2" "8.3" "8.4")
 redis_versions=("6.2" "7.4")
