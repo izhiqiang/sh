@@ -50,7 +50,7 @@ function sync_redis() {
 
 function sync_mariadb() {
     local hub=$1
-    for version in "${redis_versions[@]}"
+    for version in "${mariadb_versions[@]}"
     do
         local from_image="mariadb:${version}"
         local target_image="${hub}:mariadb-${version}"
